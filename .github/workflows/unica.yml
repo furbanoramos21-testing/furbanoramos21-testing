@@ -63,6 +63,7 @@ jobs:
 
         - name: "Build it!"
           run: |
+            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
             cd UN1CA
             source buildenv.sh --debug ${{ github.event.inputs.device }}
             run_cmd make_rom
