@@ -52,16 +52,9 @@ jobs:
             DEBIAN_FRONTEND=noninteractive sudo apt install -yq \
               7zip attr ccache clang ffmpeg \
               libbrotli-dev libgtest-dev libprotobuf-dev libunwind-dev libpcre2-dev \
-              libzstd-dev linux-modules-extra-$(uname -r) lld protobuf-compiler webp
+              libzstd-dev linux-modules-extra-$(uname -r) lld protobuf-compiler webp openjdk-17-jdk
             sudo modprobe erofs f2fs
 
-        - name: "Set up JDK 17"
-          uses: actions/setup-java@v5
-          with:
-            distribution: 'temurin'
-            java-version: '17'
-            cache: 'gradle'
-          
         - name: "Clone forked repo"
           run: |
             git clone --recurse-submodules https://github.com/furbanoramos21-testing/UN1CA UN1CA
