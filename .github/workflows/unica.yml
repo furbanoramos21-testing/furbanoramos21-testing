@@ -65,6 +65,7 @@ jobs:
             source buildenv.sh --debug ${{ github.event.inputs.device }}
             run_cmd make_rom
             cd ..
+          continue-on-error: true
 
         - name: "Pull Finished ROM"
           run: |
