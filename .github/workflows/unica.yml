@@ -12,6 +12,11 @@ on:
         type: choice
         options:
           - "a05s"
+      debug_build:
+        description: "Debug build"
+        required: true
+        default: false
+        type: boolean
       notify_telegram_channel:
         description: "Notify the Telegram Channel (Make sure you set up the secrets with variable named: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)"
         required: true
@@ -65,7 +70,11 @@ jobs:
           run: |
             export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
             cd UN1CA
+            if [[ "${{ github.event.inputs.debug_build }}" = "true" ]]; then
             source buildenv.sh --debug ${{ github.event.inputs.device }}
+            else
+            source buildenv.sh ${{ github.event.inputs.device }}
+            fi
             run_cmd make_rom
             cd ..
           continue-on-error: true
