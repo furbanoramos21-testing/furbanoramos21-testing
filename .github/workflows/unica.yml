@@ -1,6 +1,6 @@
 # This is a basic workflow to try to build https://github.com/salvogiangri/UN1CA under Github Actions
 
-name: "unica.yml - A attempt to build UN1CA under Github Actions"
+name: "unica.yml - Building UN1CA under Github Actions"
 
 on:
   workflow_dispatch:
@@ -91,8 +91,7 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: "Test-${{github.run_id}}-artifacts"
-            path: |
-              out/*.zip
+            path: out/UN1CA*${{ github.event.inputs.device }}*.zip
 
         - name: "Notify Telegram Channel"
           if: ${{ github.event.inputs.notify_telegram_channel == 'true' }}
