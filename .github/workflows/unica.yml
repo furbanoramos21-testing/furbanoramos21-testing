@@ -12,6 +12,7 @@ on:
         type: choice
         options:
           - "a05s"
+          - "a12s"
       debug_build:
         description: "Debug build"
         required: true
@@ -70,6 +71,9 @@ jobs:
           run: |
             export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
             cd UN1CA
+            if [[ "${{ github.event.inputs.device }}" = "a12s" ]]; then
+            git checkout a12s
+            fi
             if [[ "${{ github.event.inputs.debug_build }}" = "true" ]]; then
             source buildenv.sh --debug ${{ github.event.inputs.device }}
             else
