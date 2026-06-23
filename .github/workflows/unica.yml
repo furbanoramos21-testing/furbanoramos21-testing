@@ -88,7 +88,7 @@ jobs:
             echo "Checking out directory"
             ls UN1CA/out
             echo "Ok, now copying to new out directory"
-            cp UN1CA/out/*.zip out
+            cp UN1CA/out/UN1CA*.zip out
 
         - name: "To Github Artifact"
           uses: actions/upload-artifact@v4
