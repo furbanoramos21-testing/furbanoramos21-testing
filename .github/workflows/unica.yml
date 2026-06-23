@@ -13,6 +13,7 @@ on:
         options:
           - "a05s"
           - "a12s"
+          - "j6lte"
       debug_build:
         description: "Debug build"
         required: true
@@ -71,15 +72,13 @@ jobs:
           run: |
             export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
             cd UN1CA
-            if [[ "${{ github.event.inputs.device }}" = "a12s" ]]; then
-            git checkout a12s
-            fi
+            git checkout ${{ github.event.inputs.device }}
             if [[ "${{ github.event.inputs.debug_build }}" = "true" ]]; then
             source buildenv.sh --debug ${{ github.event.inputs.device }}
             else
             source buildenv.sh ${{ github.event.inputs.device }}
             fi
-            run_cmd make_rom
+            run_cmd make_rom --build-rom-zip
             cd ..
           continue-on-error: true
 
@@ -95,7 +94,7 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: "Test-${{github.run_id}}-artifacts"
-            path: out/UN1CA*${{ github.event.inputs.device }}*.zip
+            path: out/*${{ github.event.inputs.device }}*.zip
 
         - name: "Notify Telegram Channel"
           if: ${{ github.event.inputs.notify_telegram_channel == 'true' }}
