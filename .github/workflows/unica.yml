@@ -1,12 +1,12 @@
 # This is a basic workflow to try to build https://github.com/salvogiangri/UN1CA under Github Actions
 
-name: "unica.yml - Building UN1CA under Github Actions"
+name: "Build UN1CA under Github Actions"
 
 on:
   workflow_dispatch:
     inputs:
       device:
-        description: "Select a device"
+        description: "Device"
         required: true
         default: "a05s"
         type: choice
@@ -19,8 +19,8 @@ on:
         required: true
         default: false
         type: boolean
-      notify_telegram_channel:
-        description: "Notify the Telegram Channel (Make sure you set up the secrets with variable named: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)"
+      notify_telegram_bot:
+        description: "Notify using telegram bot (Make sure you set up the secrets with variables: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)"
         required: true
         default: false
         type: boolean
@@ -64,7 +64,7 @@ jobs:
 
         - name: "Clone forked repo"
           run: |
-            git clone --recurse-submodules https://github.com/furbanoramos21-testing/UN1CA UN1CA
+            git clone --recurse-submodules -b ${{ github.event.inputs.device }} --single-branch  https://github.com/furbanoramos21-testing/UN1CA UN1CA
             git config --global user.name "github-actions[bot]"
             git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
@@ -72,7 +72,6 @@ jobs:
           run: |
             export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
             cd UN1CA
-            git checkout ${{ github.event.inputs.device }}
             if [[ "${{ github.event.inputs.debug_build }}" = "true" ]]; then
             source buildenv.sh --debug ${{ github.event.inputs.device }}
             else
@@ -85,9 +84,8 @@ jobs:
         - name: "Pull Finished ROM"
           run: |
             mkdir out
-            echo "Checking out directory"
+            echo "Checking before copying to out directory"
             ls UN1CA/out
-            echo "Ok, now copying to new out directory"
             cp UN1CA/out/*.zip out
 
         - name: "Upload flasheable zip to Github Artifact"
@@ -95,6 +93,7 @@ jobs:
           with:
             path: out/UN1CA_*${{ github.event.inputs.device }}*.zip
             archive: false
+            continue-on-error: true
 
         - name: "Upload target_files.zip to Github Artifact"
           uses: actions/upload-artifact@v7
@@ -103,13 +102,13 @@ jobs:
             archive: false
 
         - name: "Notify Telegram Channel"
-          if: ${{ github.event.inputs.notify_telegram_channel == 'true' }}
+          if: ${{ github.event.inputs.notify_telegram_bot == 'true' }}
           uses: appleboy/telegram-action@master
           with:
             to: ${{ secrets.TELEGRAM_CHAT_ID }}
             token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
             message: |
-              Bomb Build Completed
+              UN1CA has been built sucessfully
               Action ID: ${{ github.run_id }}
               Device: ${{ github.event.inputs.device }}
      
