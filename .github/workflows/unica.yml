@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
         - name: "Checkout"
-          uses: actions/checkout@v2
+          uses: actions/checkout@v7
           
         - name: "Free disk space (1/3)"
           run: |
@@ -88,13 +88,19 @@ jobs:
             echo "Checking out directory"
             ls UN1CA/out
             echo "Ok, now copying to new out directory"
-            cp UN1CA/out/UN1CA*.zip out
+            cp UN1CA/out/*.zip out
 
-        - name: "To Github Artifact"
-          uses: actions/upload-artifact@v4
+        - name: "Upload flasheable zip to Github Artifact"
+          uses: actions/upload-artifact@v7
           with:
-            name: "Test-${{github.run_id}}-artifacts"
-            path: out/*${{ github.event.inputs.device }}*.zip
+            path: out/UN1CA_*${{ github.event.inputs.device }}*.zip
+            archive: false
+
+        - name: "Upload target_files.zip to Github Artifact"
+          uses: actions/upload-artifact@v7
+          with:
+            path: out/${{ github.event.inputs.device }}_*-target_files.zip
+            archive: false
 
         - name: "Notify Telegram Channel"
           if: ${{ github.event.inputs.notify_telegram_channel == 'true' }}
