@@ -32,7 +32,7 @@ permissions:
 jobs:
   build:
     name: "Build UN1CA"
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
         - name: "Checkout"
           uses: actions/checkout@v7
@@ -60,7 +60,7 @@ jobs:
             DEBIAN_FRONTEND=noninteractive sudo apt install -yq \
               7zip attr ccache clang ffmpeg \
               libbrotli-dev libbz2-dev libgtest-dev libprotobuf-dev libunwind-dev libpcre2-dev \
-              libzstd-dev linux-modules-extra-6.17.0-1022-azure lld protobuf-compiler webp openjdk-17-jdk
+              libzstd-dev linux-modules-extra-$(uname -r) lld protobuf-compiler webp openjdk-17-jdk
             sudo modprobe erofs f2fs
 
         - name: "Clone forked repo"
