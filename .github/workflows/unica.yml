@@ -13,8 +13,7 @@ on:
         options:
           - "a05s"
           - "a12s"
-          - "a21s"
-          - "j6lte"
+          - "m12"
       debug_build:
         description: "Debug build"
         required: true
